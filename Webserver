@@ -1,0 +1,35 @@
+Apache Webserver mit Container erstellen
+
+Ein Container mit den folgenden Spezifikationen wurde basierend auf dem untenstehenden Dockerfile erstellt:
+
+Der Docker-Container basiert auf Ubuntu.
+Das Paket "apache2" wurde installiert, einschließlich "curl".
+Die Konfigurationsdatei "000-default.conf" wurde durch die personalisierte "apache.conf" ersetzt.
+Die dargestellte Webseite wurde mit den Dateien "index.html" und "styles.css" bereitgestellt.
+Der Port 8080 wurde dem Container zugewiesen.
+
+
+Der Code im Dockerfile:
+# Select the latest Ubuntu base image
+FROM ubuntu:latest
+
+# Create the working directory
+WORKDIR /app
+
+# Install Apache web server and curl
+RUN apt-get update && \
+    apt-get install -y apache2 curl && \
+    rm -rf /var/lib/apt/lists/*
+
+# Update the Apache server configuration file
+COPY ./apache.conf /etc/apache2/sites-available/000-default.conf
+
+# Add HTML & CSS files
+COPY ./index.html /var/www/html/
+COPY ./styles.css /var/www/html/
+
+# Expose port 8080
+EXPOSE 8080
+
+# Define the startup command
+CMD ["apachectl", "-D", "FOREGROUND"]
